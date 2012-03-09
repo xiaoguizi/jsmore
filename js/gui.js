@@ -1,8 +1,6 @@
 /**
- * 
- * gui
- * 
- * practise
+ * koala 底层库文件
+ * version = '1.0.0'
  * 
  */
 
@@ -10,8 +8,23 @@ this.gui = function () {
 	_gui = this.gui;
 };
 gui.version = '1.0.0';
+gui._data = {
+	config: {
+		debug: '%DEBUG%',
+		preload: []
+	},
+	memoizedMods: {},
+	pendingMods: []
+};
 gui._util = {};
 gui._fn = {};
+
+/**
+ * [ 常用方法 ]
+ * @param  {[type]} util [description]
+ * @method {isString, isFunction, isArray, indexOf, forEach, map, filter, now, type}
+ * @return {[type]}
+ */
 (function ( util ) {
 	var AP = Array.prototype,
 		class2type = {};
@@ -60,14 +73,78 @@ gui._fn = {};
 			}
 		});
 		return ret;
-	}
+	};
+	util.now = Date.now || function () {
+		return new Date().getTime();
+	};
 	util.type = function (obj) {
 		return obj === null ? String( obj ) : class2type.toString.call( obj ) ;
 	};
 })(gui._util);
-var strings = ['hello','world'];
-var makeUpperCase = function (obj) {
-	return obj.toUpperCase();
-}
-var uppers = gui._util.map(strings, makeUpperCase);
-console.log(uppers); 
+
+/**
+ * [ 定义错误方法 ]
+ * @param  {[type]} util [description]
+ * @param  {[type]} data [description]
+ * @method {error}
+ * @return {[type]}
+ */
+(function (util, data) {
+	var config = data.config;
+	util.error = function (o) {
+		if (o.type === 'error') {
+			throw 'Errr occurs! ' + dump(o);
+		} else if (config.debug && typeof console !== 'undefined') {
+			console[o.type](dump(o));
+		}
+	};
+	function dump (o) {
+		var out = ['{'];
+		for (var p in o) {
+			if (typeof o[p] === 'number' || typeof o[p] === 'string') {
+				out.push(p + ': ' + o[p]);
+				out.push(', ');
+			}
+		}
+		out.pop();
+		out.push('}');
+		return out.join('');
+	}
+})(gui._util, util._data);
+
+/**
+ * [ 封装了些操作url的方法 ]
+ * @param  {[type]} argument [description]
+ * @method {}
+ * @return {[type]}
+ */
+(function (util, data, global) {
+	var config = data.config;
+	function dirname (path) {
+		var s = path.match(/.*(?=\/.*$)/);
+		return (s ? s[0] : '.') + '/';
+	}
+	function realpath (path) {
+		path = path.replace(/([^:\/])\/+/g, '$1\/');
+		if (path.indexOf('.') === -1) {
+			return path;
+		}
+		var old = path.split('/');
+		var ret = [],
+		part,
+		i = 0,
+		len = old.length;
+		for (; i < len; i++) {
+			part = old[i];
+			if (part === '..') {
+				if (ret.length === 0) {
+					util.error({
+						message: 'invalid path: ' + path,
+						type: 'error'
+					}) 
+				}
+			}
+		};
+	}
+	util.dirname = dirname;
+})(guijs._util, guijs._data, this);

@@ -74,7 +74,8 @@ seajs._fn = {};
     function() {
         return new Date().getTime();
     };
-})(seajs._util); 
+})(seajs._util);
+
 (function(util, data) {
     var config = data.config;
     util.error = function(o) {
@@ -97,6 +98,7 @@ seajs._fn = {};
         return out.join('');
     }
 })(seajs._util, seajs._data); 
+
 (function(util, data, global) {
     var config = data.config;
     function dirname(path) {
