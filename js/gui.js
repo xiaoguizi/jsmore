@@ -31,7 +31,7 @@ gui._fn = {};
 			if(arr[i] === item){
 				return i;
 			}
-		};
+		}
 		return -1;
 	};
 	var forEach = util.forEach = AP.forEach ? function (arr, fn) {
@@ -39,7 +39,7 @@ gui._fn = {};
 	} : function (arr, fn) {
 		for (var i = 0, len = arr.length; i < len; i++) {
 			fn(arr[i], i, arr);
-		};
+		}
 	};
 	util.map = AP.map ? function (arr, fn) {
 		return arr.map(fn);
@@ -57,7 +57,7 @@ gui._fn = {};
 		forEach(arr, function (item, i, arr) {
 			if (fn(item, i, arr)) {
 				ret.push(item);
-			};
+			}
 		});
 		return ret;
 	}
@@ -70,4 +70,4 @@ var makeUpperCase = function (obj) {
 	return obj.toUpperCase();
 }
 var uppers = gui._util.map(strings, makeUpperCase);
-console. 
+console.log(uppers); 
